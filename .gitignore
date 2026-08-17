@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Build output
+dist/
+dist-ssr/
+build/
+*.local
+
+# Environment — never commit real credentials
+.env
+.env.*
+!.env.example
+
+# Editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test / tooling caches
+coverage/
+.nyc_output/
+.eslintcache
+*.tsbuildinfo
+.vite/
+
+# Supabase CLI local state (linked project ref, local db volumes, temp)
+supabase/.branches/
+supabase/.temp/
+supabase/.env

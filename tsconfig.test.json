@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "jsx": "react-jsx",
+    "types": ["node", "vitest/globals"],
+    "lib": ["ES2023", "DOM"],
+    // The Edge Function sources are Deno modules: they import with an explicit
+    // .ts extension because Deno requires it. The suite type-checks them along
+    // with everything else rather than leaving the one place a credential lives
+    // outside the type system.
+    "allowImportingTsExtensions": true,
+
+    "noEmit": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "resolveJsonModule": true,
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["supabase/tests", "supabase/functions/_shared", "src/**/*.node.test.ts"]
+}

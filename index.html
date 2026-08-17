@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#f7f7f5" />
+    <meta
+      name="description"
+      content="Atlas — Car Rental Management SaaS: vehicles, contracts, customers, payments and reporting for car rental agencies."
+    />
+    <!-- The publisher, not the agency using it: this names who wrote the software. -->
+    <meta name="author" content="Profit Studio" />
+    <!-- This is an internal operations console, not a public page. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <!--
+      No Referer, ever.
+
+      An invitation link carries a bearer token in its fragment. Fragments are
+      not sent in a Referer header, but the surrounding path still is, and
+      "/accept-invite" arriving at a third party is a signal about a person that
+      nothing here needs to emit. The same policy protects every other route: a
+      contract, customer and vehicle id all appear in this product's URLs.
+    -->
+    <meta name="referrer" content="no-referrer" />
+    <title>Atlas · Car Rental Management SaaS</title>
+  </head>
+  <body>
+    <a
+      href="#main"
+      style="
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        z-index: 100;
+        padding: 0.5rem 1rem;
+        background: #fff;
+      "
+      onfocus="this.style.left='0.5rem'; this.style.top='0.5rem'"
+      onblur="this.style.left='-9999px'"
+      >Skip to main content</a
+    >
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

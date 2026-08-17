@@ -1,0 +1,238 @@
+@import 'tailwindcss';
+
+/* =============================================================================
+   Design tokens — "Depot"
+   =============================================================================
+
+   The visual direction is drawn from the agency's own materials: printed
+   contracts, registration plates, and the dispatch board that tells a manager
+   which cars are out and which are on the lot.
+
+   Colour       Graphite ink on warm paper, with a deep pine green as the single
+                interactive colour. Pine also serves as the "available" status,
+                which is deliberate — in a fleet product the desired state and
+                the brand should agree. Every other status is tinted, never
+                filled, so a table of twenty rows stays calm.
+
+   Type         One system sans for the interface, one mono for identifiers.
+                Registration plates, VINs and contract references are set in
+                mono with wide tracking, the way they appear on the documents
+                themselves. Every figure uses tabular numerals so columns of
+                money line up on the decimal.
+
+   Restraint    Hairline borders instead of shadows; shadow is reserved for
+                surfaces that genuinely float (menus, dialogs). Radii stay small.
+                No gradients, no glow.
+   ========================================================================== */
+
+@theme {
+  /* ---- Surfaces & structure -------------------------------------------- */
+  --color-canvas: #f7f7f5;
+  --color-canvas-sunken: #efefec;
+  --color-surface: #ffffff;
+  --color-surface-muted: #fafaf9;
+  --color-surface-inset: #f4f4f2;
+
+  --color-line: #e6e6e2;
+  --color-line-strong: #d4d4cf;
+
+  /* ---- Text ------------------------------------------------------------- */
+  --color-ink: #16181a;
+  --color-ink-muted: #5b6167;
+  --color-ink-subtle: #888e94;
+  --color-ink-inverse: #ffffff;
+
+  /* ---- Brand: deep pine -------------------------------------------------- */
+  --color-brand-50: #eef6f2;
+  --color-brand-100: #d7eae1;
+  --color-brand-200: #aed4c4;
+  --color-brand-300: #7fbaa1;
+  --color-brand-400: #4f9c7f;
+  --color-brand-500: #2e7d63;
+  --color-brand-600: #22664f;
+  --color-brand-700: #1b5040;
+  --color-brand-800: #163f33;
+  --color-brand-900: #12332b;
+
+  /* ---- Status --------------------------------------------------------- */
+  --color-positive-50: #edf7f1;
+  --color-positive-200: #b3ddc6;
+  --color-positive-600: #1f7a4d;
+  --color-positive-700: #175f3c;
+
+  --color-info-50: #eef3fb;
+  --color-info-200: #bed2ee;
+  --color-info-600: #1f5fa8;
+  --color-info-700: #194b85;
+
+  --color-caution-50: #fbf4e8;
+  --color-caution-200: #ecd7a8;
+  --color-caution-600: #8a5a00;
+  --color-caution-700: #6e4800;
+
+  --color-critical-50: #fceeec;
+  --color-critical-200: #f0c2ba;
+  --color-critical-600: #a33a2a;
+  --color-critical-700: #822e21;
+
+  /* ---- Chart series ------------------------------------------------------
+   * Separate from both the brand and the status ramps. Chart marks need more
+   * chroma than interface chrome to stay legible at 6px wide, and status
+   * colours are reserved for status — money coming in is not "good news" and
+   * money going out is not an error.
+   *
+   * Validated against a white chart surface: both inside the L 0.43–0.77 band,
+   * chroma >= 0.1, worst adjacent CVD separation ΔE 9.7 (protanopia) and 22.8
+   * (tritanopia), normal-vision ΔE 18.5, contrast >= 3:1.
+   */
+  --color-chart-revenue: #12876a;
+  --color-chart-expenses: #a8631f;
+  --color-chart-grid: #ecece9;
+
+  --color-neutral-badge-50: #f2f2f0;
+  --color-neutral-badge-200: #d8d8d4;
+  --color-neutral-badge-600: #62686e;
+
+  /* ---- Type ------------------------------------------------------------- */
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  --font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, 'Liberation Mono',
+    monospace;
+
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1rem;
+
+  /* ---- Elevation — used sparingly ---------------------------------------- */
+  --shadow-raised: 0 1px 2px rgb(22 24 26 / 0.04);
+  --shadow-overlay:
+    0 1px 1px rgb(22 24 26 / 0.04), 0 8px 24px -6px rgb(22 24 26 / 0.12),
+    0 2px 6px -2px rgb(22 24 26 / 0.06);
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'cv05' 1;
+  }
+
+  /* Money and counts must align on the decimal in every table and tile. */
+  table,
+  [data-numeric] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 600;
+    letter-spacing: -0.011em;
+    color: var(--color-ink);
+    margin: 0;
+  }
+
+  /* A single, unmistakable focus treatment across the whole product. */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-100);
+    color: var(--color-brand-900);
+  }
+
+  /* Firefox scrollbars in the sidebar and long tables. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-line-strong);
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background-clip: content-box;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /*
+   * Identifier treatment: registration plates, VINs and contract references.
+   * Mono, tracked out and slightly raised — the way they read on the document
+   * the staff member is holding.
+   */
+  .identifier {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /*
+   * Entry animation for floating surfaces (menus, popovers). Short enough to
+   * feel immediate; the reduced-motion rule in the base layer neutralises it.
+   */
+  .overlay-enter {
+    animation: overlay-enter 120ms cubic-bezier(0.2, 0, 0.13, 1);
+  }
+
+  @keyframes overlay-enter {
+    from {
+      opacity: 0;
+      transform: translateY(-2px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Section eyebrows and table column headers. */
+  .eyebrow {
+    font-size: var(--text-2xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-subtle);
+  }
+}
