@@ -304,3 +304,12 @@ cannot: PostgREST's query builder (the `.or()` search, view pagination, ordering
 count), Storage upload and signed-URL retrieval, GoTrue sign-in, and cross-tenant refusal
 of real signed URLs. It creates data prefixed `Smoke Test` and removes all of it, including
 uploaded objects, at the end.
+
+## License
+
+Atlas is released under the MIT License.
+
+You may use, modify, distribute and use the software commercially under the terms of the
+license.
+
+See [LICENSE](./LICENSE) for the full license text.

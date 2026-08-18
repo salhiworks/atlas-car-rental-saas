@@ -9,6 +9,8 @@ The build distributed today is the **Free build**: every module is unlocked, no
 subscription is enforced, and the Billing page shows example pricing rather than a
 plan anybody is on.
 
+License: MIT — see [LICENSE](./LICENSE).
+
 ---
 
 ## Required for the core application

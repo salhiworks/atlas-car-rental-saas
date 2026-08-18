@@ -821,8 +821,23 @@ await check('the directory reports licence validity without the number', async (
   assert(data.driver_license_expires_on === '2030-09-30', 'expiry missing')
 
   const serialised = JSON.stringify(data)
-  assert(!serialised.includes(`DL${STAMP}`), 'the licence number leaked into the list read model')
-  assert(!serialised.includes('456'), 'a passport number leaked into the list read model')
+  /*
+   * Match the whole distinctive identifier, never a fragment of one. A bare
+   * '456' is three characters that also turn up by chance inside the UUIDs and
+   * timestamps this row is full of — measured at about one run in twenty — so
+   * it failed the suite without a number ever having leaked. Both documents
+   * are checked as typed AND as the database normalises them, because either
+   * form appearing here would be the disclosure this check exists to catch.
+   */
+  const leakable = {
+    'licence number': `DL${STAMP}`,
+    'normalised licence number': `DL${STAMP.toUpperCase()}`,
+    'passport number': `AB ${STAMP} 456`,
+    'normalised passport number': `AB${STAMP.toUpperCase()}456`,
+  }
+  for (const [what, value] of Object.entries(leakable)) {
+    assert(!serialised.includes(value), `the ${what} leaked into the list read model`)
+  }
   return 'validity present, numbers absent'
 })
 
