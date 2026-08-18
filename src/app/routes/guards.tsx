@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
 import { ErrorState } from '@/components/feedback/ErrorState'
@@ -12,7 +13,8 @@ import { AppError } from '@/lib/supabase/errors'
 import { paths } from './paths'
 
 /**
- * Requires a session.
+ * Requires a session — except at the root path, which a signed-out visitor is
+ * shown the public marketing page for instead of being bounced to sign-in.
  *
  * While the session is being restored the guard renders a loader rather than
  * redirecting — otherwise every page reload would bounce a signed-in user
@@ -22,13 +24,19 @@ import { paths } from './paths'
  * route is protected by Row Level Security; a user who forces their way to a
  * URL sees an empty screen, never another agency's records.
  */
-export function RequireAuth() {
+export function RequireAuth({ publicHome }: { publicHome?: ReactNode } = {}) {
   const { status } = useAuth()
   const location = useLocation()
 
   if (status === 'loading') return <FullPageLoader label="Restoring your session" />
 
   if (status === 'unauthenticated') {
+    // `paths.overview` ('/') is the one route with a real page to show a
+    // signed-out visitor. Every other path still bounces to sign-in — this is
+    // the only branch in this guard, not a general public/authenticated router.
+    if (publicHome && location.pathname === paths.overview) {
+      return <>{publicHome}</>
+    }
     return (
       <Navigate to={paths.signIn} state={{ from: location.pathname + location.search }} replace />
     )

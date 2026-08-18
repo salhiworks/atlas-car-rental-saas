@@ -111,6 +111,74 @@ describe('RequireAuth', () => {
     expect(screen.queryByText('Protected content')).not.toBeInTheDocument()
     expect(screen.getByRole('status')).toBeInTheDocument()
   })
+
+  describe('the publicHome branch', () => {
+    it('shows the public home to a signed-out visitor at the root path', () => {
+      renderRoutes({
+        initialPath: paths.overview,
+        auth: 'unauthenticated',
+        children: (
+          <Route element={<RequireAuth publicHome={<p>Marketing home</p>} />}>
+            <Route path={paths.overview} element={<p>Overview</p>} />
+          </Route>
+        ),
+      })
+
+      expect(screen.getByText('Marketing home')).toBeInTheDocument()
+      expect(screen.queryByText('Overview')).not.toBeInTheDocument()
+      expect(screen.queryByText('Sign in screen')).not.toBeInTheDocument()
+    })
+
+    it('still redirects a signed-out visitor away from every other protected path', () => {
+      renderRoutes({
+        initialPath: '/protected',
+        auth: 'unauthenticated',
+        children: (
+          <Route element={<RequireAuth publicHome={<p>Marketing home</p>} />}>
+            <Route path={paths.overview} element={<p>Overview</p>} />
+            <Route path="/protected" element={<p>Protected content</p>} />
+          </Route>
+        ),
+      })
+
+      expect(screen.getByText('Sign in screen')).toBeInTheDocument()
+      expect(screen.queryByText('Marketing home')).not.toBeInTheDocument()
+      expect(screen.queryByText('Protected content')).not.toBeInTheDocument()
+    })
+
+    it('renders the authenticated route at the root path for a signed-in user, not the public home', () => {
+      renderRoutes({
+        initialPath: paths.overview,
+        auth: 'authenticated',
+        children: (
+          <Route element={<RequireAuth publicHome={<p>Marketing home</p>} />}>
+            <Route path={paths.overview} element={<p>Overview</p>} />
+          </Route>
+        ),
+      })
+
+      expect(screen.getByText('Overview')).toBeInTheDocument()
+      expect(screen.queryByText('Marketing home')).not.toBeInTheDocument()
+    })
+
+    it('does not show the public home at the root path when none was provided', () => {
+      // Every other caller of RequireAuth omits `publicHome` and must keep
+      // redirecting a signed-out visitor at `/`, exactly as before this branch
+      // existed.
+      renderRoutes({
+        initialPath: paths.overview,
+        auth: 'unauthenticated',
+        children: (
+          <Route element={<RequireAuth />}>
+            <Route path={paths.overview} element={<p>Overview</p>} />
+          </Route>
+        ),
+      })
+
+      expect(screen.getByText('Sign in screen')).toBeInTheDocument()
+      expect(screen.queryByText('Overview')).not.toBeInTheDocument()
+    })
+  })
 })
 
 describe('RequireAnonymous', () => {

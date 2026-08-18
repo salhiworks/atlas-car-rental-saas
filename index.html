@@ -11,8 +11,19 @@
     />
     <!-- The publisher, not the agency using it: this names who wrote the software. -->
     <meta name="author" content="Profit Studio" />
-    <!-- This is an internal operations console, not a public page. -->
-    <meta name="robots" content="noindex, nofollow" />
+    <!--
+      `/` is a public marketing page for a signed-out visitor now, so this
+      origin is indexable. Everything behind sign-in still requires a session
+      regardless of what a crawler does — Row Level Security is the actual
+      boundary, not this tag.
+    -->
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="%VITE_APP_NAME% · Car Rental Management SaaS" />
+    <meta
+      property="og:description"
+      content="%VITE_APP_NAME% — Car Rental Management SaaS: vehicles, contracts, customers, payments and reporting for car rental agencies."
+    />
     <!--
       No Referer, ever.
 
@@ -36,8 +47,11 @@
         padding: 0.5rem 1rem;
         background: #fff;
       "
-      onfocus="this.style.left='0.5rem'; this.style.top='0.5rem'"
-      onblur="this.style.left='-9999px'"
+      onfocus="
+        this.style.left = '0.5rem'
+        this.style.top = '0.5rem'
+      "
+      onblur="this.style.left = '-9999px'"
       >Skip to main content</a
     >
     <div id="root"></div>

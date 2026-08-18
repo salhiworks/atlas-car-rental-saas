@@ -162,6 +162,18 @@ const CreateAgencyPage = lazy(() =>
   })),
 )
 
+/*
+ * The public marketing homepage. Shown at `paths.overview` ('/') only to a
+ * signed-out visitor — see the `publicHome` branch in `RequireAuth`. It is its
+ * own lazy chunk so visiting `/` signed out never downloads the authenticated
+ * shell, its feature modules, or anything Reports/GPS/Financing pull in.
+ */
+const MarketingHomePage = lazy(() =>
+  import('@/pages/marketing/MarketingHomePage').then((module) => ({
+    default: module.MarketingHomePage,
+  })),
+)
+
 /** The permission that gates each not-yet-open section, taken from the nav model. */
 const permissionForPath = new Map(
   navigationGroups.flatMap((group) => group.items.map((item) => [item.to, item.permission])),
@@ -197,8 +209,9 @@ export function AppRouter() {
            */}
           <Route path={paths.acceptInvite} element={<AcceptInvitePage />} />
 
-          {/* Authenticated */}
-          <Route element={<RequireAuth />}>
+          {/* Authenticated — except `/`, which a signed-out visitor sees the
+              public marketing page for instead of being sent to sign in. */}
+          <Route element={<RequireAuth publicHome={<MarketingHomePage />} />}>
             <Route element={<WithWorkspace />}>
               <Route element={<RequireNoOrganization />}>
                 <Route path={paths.createAgency} element={<CreateAgencyPage />} />
