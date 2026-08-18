@@ -154,13 +154,32 @@ max_indexes = 5
 
 [auth]
 enabled = true
+# ---------------------------------------------------------------------------
+# LOCAL DEVELOPMENT ONLY (`supabase start`). This is not the supported way to
+# configure Auth on your hosted project.
+#
+# `supabase config push` uploads this whole file — api, db, storage and auth
+# together — to whichever project is linked. Running it against your hosted
+# project would silently overwrite real settings (including turning email
+# confirmation on or off) with values tuned for a laptop, not production.
+# Configure your hosted project's Auth from the Supabase Dashboard ->
+# Authentication -> URL Configuration / Providers instead. See
+# supabase/README.md.
+# ---------------------------------------------------------------------------
 # The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
-# in emails.
-site_url = "http://127.0.0.1:3000"
+# in emails. Atlas's dev server defaults to http://localhost:5173 (vite.config.ts) — update this
+# if you changed that port, or Vite fell back to a different one because 5173 was already in use.
+site_url = "http://localhost:5173"
 # The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.
 # external_url = ""
-# A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["https://127.0.0.1:3000"]
+# A list of *exact* URLs Auth is permitted to redirect to after sign-up confirmation, password
+# reset and team invitations. Keep the port in sync with site_url above.
+additional_redirect_urls = [
+  "http://localhost:5173/auth/callback",
+  "http://localhost:5173/accept-invite",
+  "http://localhost:5173/auth/reset-password",
+  "http://localhost:5173/confirm-email",
+]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # JWT issuer URL. If not set, defaults to auth.external_url.
@@ -222,8 +241,11 @@ enable_signup = true
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
-# If enabled, users need to confirm their email address before signing in.
-enable_confirmations = false
+# If enabled, users need to confirm their email address before signing in. Supabase's own
+# new-project default is `true`; kept the same here rather than silently weakening it. For a fast
+# local loop you may set this to `false` on your own machine, but never push that choice to a
+# hosted project (see the note above [auth]) — decide it deliberately in the dashboard instead.
+enable_confirmations = true
 # If enabled, users will need to reauthenticate or have logged in recently to change their password.
 secure_password_change = false
 # Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.

@@ -15,11 +15,47 @@ of the box and what is optional.
 
 ## Getting started
 
+The base **Free Build** needs only a Supabase project. Stripe, Wialon and an invitation
+email provider are all optional — nothing below requires any of them; see
+[Edge Function secrets](#edge-function-secrets).
+
 ```bash
-npm install
+git clone https://github.com/salhiworks/atlas-car-rental-saas.git
+cd atlas-car-rental-saas
+npm ci
+```
+
+Create a Supabase project (dashboard → New project), then set up the database and Edge
+Functions — see [`supabase/README.md`](supabase/README.md) for the full walkthrough:
+
+```bash
+supabase login
+supabase link --project-ref <your-project-ref>
+supabase db push
+supabase functions deploy team-invitations gps-provider billing billing-webhook \
+  --project-ref <your-project-ref>
+```
+
+Neither command needs Docker or the local Supabase stack: both push directly to your
+hosted project. Docker only matters if you separately run `supabase start` for fully
+offline local development — this workflow doesn't need that.
+
+```bash
 cp .env.example .env.local     # then fill in the two Supabase values
+```
+
+Then configure Auth → URL Configuration in the dashboard — Site URL and redirect URLs,
+detailed in [`supabase/README.md`](supabase/README.md#supabase-project-settings-to-check).
+Supabase enables email confirmation by default on new projects; the app handles either
+setting, so decide deliberately rather than switching it off out of habit.
+
+```bash
 npm run dev
 ```
+
+Sign up once the app is running — that creates your account and your agency together.
+If Vite starts on a port other than 5173 because something else already holds it, either
+free 5173 or add the port it actually used to Auth's redirect allow-list.
 
 Without a configured database the application does not start; it renders a screen naming
 the missing variables. That is deliberate — see [Configuration](#configuration).
@@ -104,9 +140,10 @@ invitation after confirming their address rather than to the generic callback.
 
 ## Applying the database schema
 
-The schema lives in `supabase/migrations/` and is the source of truth. See
-[`supabase/README.md`](supabase/README.md) for how to apply it — via the Supabase CLI or
-by pasting the files, in order, into the SQL editor.
+The schema lives in `supabase/migrations/` and is the source of truth — 53 files, applied
+in order by `supabase db push`. See [`supabase/README.md`](supabase/README.md) for the
+full setup walkthrough, including the (much slower) SQL-editor fallback for when the CLI
+isn't available.
 
 Nothing is created by hand in the dashboard. If a table exists, it exists because a
 migration in this repository created it.
