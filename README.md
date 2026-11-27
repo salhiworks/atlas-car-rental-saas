@@ -186,6 +186,8 @@ in order by `supabase db push`. See [`supabase/README.md`](supabase/README.md) f
 full setup walkthrough, including the (much slower) SQL-editor fallback for when the CLI
 isn't available.
 
+On migration pull requests, [RattleCheck](.github/workflows/rattlecheck.yml) compares SQL permissions with the base branch. It flags new high or critical findings at the migration line before you run `supabase db push`. It needs no database credentials.
+
 Nothing is created by hand in the dashboard. If a table exists, it exists because a
 migration in this repository created it.
 
